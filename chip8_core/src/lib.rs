@@ -106,8 +106,26 @@ impl Emu {
         match (digit1, digit2, digit3, digit4) {
             // NOP
             (0, 0, 0, 0) => return,
+            //CLS
             (0, 0, 0xE, 0) => {
                 self.screen = [false: SCREEN_WIDTH * SCREEN_HEIGHT];
+            },
+            // RET 
+            (0, 0, 0xE, 0xE) => {
+                let ret_addr = self.pop();
+                self.pc = ret_addr;
+            }
+            // JMP NNN
+            (1, _, _, _) => {
+                let nnn = op & 0xFFF;
+                self.pc = nnn;
+            }
+            // CALL NNN
+            (2, _, _, _) => {
+                let nnn = op & 0xFFF;
+                self.push(self.pc);
+                self.pc = nnn;
+            }
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

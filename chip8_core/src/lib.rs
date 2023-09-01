@@ -126,6 +126,14 @@ impl Emu {
                 self.push(self.pc);
                 self.pc = nnn;
             }
+            // SKIP VX == NN
+            (3, _, _, _) => {
+                let x = digit2 as usize;
+                let nn = (op & 0xFF) as u8;
+                if self.v_reg[x] == n {
+                    self.pc += 2:
+                }
+            }
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

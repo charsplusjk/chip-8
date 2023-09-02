@@ -114,18 +114,18 @@ impl Emu {
             (0, 0, 0xE, 0xE) => {
                 let ret_addr = self.pop();
                 self.pc = ret_addr;
-            }
+            },
             // JMP NNN
             (1, _, _, _) => {
                 let nnn = op & 0xFFF;
                 self.pc = nnn;
-            }
+            },
             // CALL NNN
             (2, _, _, _) => {
                 let nnn = op & 0xFFF;
                 self.push(self.pc);
                 self.pc = nnn;
-            }
+            },
             // SKIP VX == NN
             (3, _, _, _) => {
                 let x = digit2 as usize;
@@ -133,7 +133,15 @@ impl Emu {
                 if self.v_reg[x] == n {
                     self.pc += 2:
                 }
-            }
+            },
+            // SKIP VX != NN
+            (4, _, _, _) => {
+                let x = digit2 as usize;
+                let nn = (op & oxFF) as u8;
+                if self.v_reg[x] != nn {
+                    self.pc += 2;
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

@@ -142,6 +142,14 @@ impl Emu {
                     self.pc += 2;
                 }
             },
+            // SKIP VX = VY
+            (5, _, _, 0) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                if self.v_reg[x] == v_reg[y] {
+                    self.pc += 2;
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

@@ -208,6 +208,13 @@ impl Emu {
                 self.v_reg[x] = new_vx;
                 self.v_reg[y] = new_vf;
             },
+            // VX >>= 1
+            (8, _, _, 6) => {
+                let x = digit2 as usize;
+                let lsb = self.v_reg[x] & 1;
+                self.v_reg[x] >>= 1;
+                self.v_reg[0xF] = lsb;
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

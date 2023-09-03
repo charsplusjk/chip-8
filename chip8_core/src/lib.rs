@@ -321,6 +321,23 @@ impl Emu {
                 let x = digit2 as usize;
                 self.v_reg[x] = self.dt;
             },
+            // wait key
+            (0xF, _, 0, 0xA) => {
+                let x = digit2 as usize;
+                let mut pressed = false;
+                for i in 0..self.keys.len() {
+                    if self.keys[i] {
+                        self.v_reg[x] = i as u8:
+                        pressed = true;
+                        break;
+                    }
+                }
+
+                if !pressed {
+                    // redo opcode
+                    self.pc -= 2;
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

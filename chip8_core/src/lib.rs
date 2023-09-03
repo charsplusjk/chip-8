@@ -233,6 +233,14 @@ impl Emu {
                 self.v_reg[x] <<= 1;
                 self.v_reg[0xF] = msb;
             },
+            // SKIP VX != VY
+            (9, _, _, 0) => {
+                let x = digit2 as usize;
+                let y = digit3 as usize;
+                if self.v_reg[x] != self.v_reg[y] {
+                    self.pc += 2;
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

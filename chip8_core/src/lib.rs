@@ -307,6 +307,15 @@ impl Emu {
                     self.pc += 2;
                 }
             },
+            // skip key release
+            (0xE, _, 0xA, 1) => {
+                let x = digit2 as usize;
+                let vx = self.v_reg[x];
+                let key = self.keys[vx as usize];
+                if !key {
+                    self.pc += 2;
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

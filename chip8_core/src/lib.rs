@@ -260,6 +260,44 @@ impl Emu {
                 let rng: u8 = random();
                 self.v_reg[x] = rng & nn;
             },
+            // DRAW
+            (0xD, _, _, _) => {
+                // get the (x, y) coordinates for our sprite
+                let x_coord = self.v_reg[digit2 as usize] as u16;
+                let y_coord = self.v_reg[digit3 as usize] as u16;
+                // the last digit determines how many rows high our sprite is 
+                let num_rows = digit4;
+                // keep track if any pixelds were flipped
+                let mut flipped = false;
+                // iterate over each row of sprite
+                for y_line in 0..num_rows {
+                    // determine which memory address our row's data is stored
+                    let addr = self.i_reg + y_line as u16;
+                    let pixels = self.ram[addr as usize];
+                    // iterate over each column in our row
+                    for x_line in 0..8 {
+                        // use a mask to fetch current pixel's bit - only flip if 1
+                        if (pixels & (0b1000_0000 >> x_line)) != 0 {
+                            // sprites should wrap around screen, so apply modulo
+                            let x = (x_coord + x_line) as usize % SSCREEN_WIDTH;
+                            let y = (y_coord + y_line) as usize % SCREEN_HEIGHT;
+
+                            // get pixel index for our 1d screen array
+                            let idx = x + SCREEN_WIDTH + y;
+                            // check if we are about to flip the pixel and set
+                            flipped != self.screen[idx];
+                            self.screen[idx] ^=true;
+                        }
+                    }
+                }
+
+                // populate VF register
+                if flipped {
+                    self.v_reg[0xF] = 1;
+                } else {
+                    self.v_reg[0xF] = 0;
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

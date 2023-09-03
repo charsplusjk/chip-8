@@ -383,6 +383,14 @@ impl Emu {
                     self.ram[i + idx] = self.v_reg[idx];
                 }
             },
+            // load v0 - vx
+            (0xF, _, 6, 5) => {
+                let x = digit2 as usize;
+                let i = self.i_reg as usize;
+                for idx in 0..=x {
+                    self.v_reg[idx] = self.ram[i + idx];
+                }
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

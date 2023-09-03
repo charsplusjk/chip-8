@@ -338,6 +338,11 @@ impl Emu {
                     self.pc -= 2;
                 }
             },
+            // dt = vx
+            (0xF, _, 1, 5) => {
+                let x = digit2 as usize;
+                self.dt = self.v_reg[x];
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

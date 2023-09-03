@@ -359,6 +359,22 @@ impl Emu {
                 let c = self.v_reg[x] as u16;
                 self.i_reg = c * 5;
             },
+            // BCD
+            (0xF, _, 3, 3) => {
+                let x = digit2 as usize;
+                let vx = self.v_reg[x] as f32;
+
+                // fetch the hundreds digit by dividing by 100 and tossing the decimal
+                let hundreds = (vx / 100.0).floor() as u8;
+                // fetch the tens digit by dividing by 10, tossing the hundreds and ones
+                let tens = ((vx / 10.0) % 10.0) floor() as u8;
+                // fetch the ones digit by tossing the hundreds ans tens
+                let ones = (vx % 10.0) as u8;
+
+                self.ram[self.i_reg as usize] = hundreds;
+                self.ram[(self.i_reg + 1) as usize] = tens;
+                self.ram[(self.i_reg + 2) as usize] = ones;
+            },
             (_, _, _, _) => unimplemented!("Uninplemented opcode: {}", op),
         }
     }

@@ -81,9 +81,9 @@ impl Emu {
     pub fn reset(&mut self) {
         self.pc = START_ADDR;
         self.ram = [0; RAM_SIZE];
-        self.screen = [false: SCREEN_WIDTH * SCREEN_HEIGHT];
+        self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
         self.v_reg = [0; NUM_REGS];
-        self.i_reg = [0;
+        self.i_reg = 0;
         self.sp = 0;
         self.stack = [0; STACK_SIZE];
         self.keys = [false; NUM_KEYS];
@@ -110,7 +110,7 @@ impl Emu {
             (0, 0, 0, 0) => return,
             //CLS
             (0, 0, 0xE, 0) => {
-                self.screen = [false: SCREEN_WIDTH * SCREEN_HEIGHT];
+                self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
             },
             // RET 
             (0, 0, 0xE, 0xE) => {
@@ -132,14 +132,14 @@ impl Emu {
             (3, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0xFF) as u8;
-                if self.v_reg[x] == n {
-                    self.pc += 2:
+                if self.v_reg[x] == nn {
+                    self.pc += 2;
                 }
             },
             // SKIP VX != NN
             (4, _, _, _) => {
                 let x = digit2 as usize;
-                let nn = (op & oxFF) as u8;
+                let nn = (op & 0xFF) as u8;
                 if self.v_reg[x] != nn {
                     self.pc += 2;
                 }
@@ -148,7 +148,7 @@ impl Emu {
             (5, _, _, 0) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
-                if self.v_reg[x] == v_reg[y] {
+                if self.v_reg[x] == self.v_reg[y] {
                     self.pc += 2;
                 }
             },
@@ -173,7 +173,7 @@ impl Emu {
             // VX |= Vy 
             (8, _, _, 1) => {
                 let x = digit2 as usize;
-                let y = digit3 as usize:
+                let y = digit3 as usize;
                 self.v_reg[x] |= self.v_reg[y];
             },
             // VX &= VY
@@ -279,7 +279,7 @@ impl Emu {
                         // use a mask to fetch current pixel's bit - only flip if 1
                         if (pixels & (0b1000_0000 >> x_line)) != 0 {
                             // sprites should wrap around screen, so apply modulo
-                            let x = (x_coord + x_line) as usize % SSCREEN_WIDTH;
+                            let x = (x_coord + x_line) as usize % SCREEN_WIDTH;
                             let y = (y_coord + y_line) as usize % SCREEN_HEIGHT;
 
                             // get pixel index for our 1d screen array
@@ -327,7 +327,7 @@ impl Emu {
                 let mut pressed = false;
                 for i in 0..self.keys.len() {
                     if self.keys[i] {
-                        self.v_reg[x] = i as u8:
+                        self.v_reg[x] = i as u8;
                         pressed = true;
                         break;
                     }
@@ -367,7 +367,7 @@ impl Emu {
                 // fetch the hundreds digit by dividing by 100 and tossing the decimal
                 let hundreds = (vx / 100.0).floor() as u8;
                 // fetch the tens digit by dividing by 10, tossing the hundreds and ones
-                let tens = ((vx / 10.0) % 10.0) floor() as u8;
+                let tens = ((vx / 10.0) % 10.0).floor() as u8;
                 // fetch the ones digit by tossing the hundreds ans tens
                 let ones = (vx % 10.0) as u8;
 

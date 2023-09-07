@@ -1,1 +1,1 @@
-E:\_PROGRAMAÇÃO\chip8\ emulator\emulator\chip-8\desktop\target\debug\desktop.exe: E:\_PROGRAMAÇÃO\chip8\ emulator\emulator\chip-8\chip8_core\src\lib.rs E:\_PROGRAMAÇÃO\chip8\ emulator\emulator\chip-8\desktop\src\main.rs
+/home/juan/coding/chip-8/desktop/target/debug/desktop: /home/juan/coding/chip-8/chip8_core/src/lib.rs /home/juan/coding/chip-8/desktop/src/main.rs

@@ -1,7 +1,3 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 use rand::random;
 
 const FONTSET_SIZE: usize = 80;

@@ -281,7 +281,7 @@ impl Emu {
                             // get pixel index for our 1d screen array
                             let idx = x + SCREEN_WIDTH + y;
                             // check if we are about to flip the pixel and set
-                            flipped != self.screen[idx];
+                            flipped |= self.screen[idx];
                             self.screen[idx] ^=true;
                         }
                     }

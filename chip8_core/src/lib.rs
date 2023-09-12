@@ -157,7 +157,7 @@ impl Emu {
             // VX += NN
             (7, _, _, _) => {
                 let x = digit2 as usize;
-                let nn = (op &0xFF) as u8;
+                let nn = (op & 0xFF) as u8;
                 self.v_reg[x] = self.v_reg[x].wrapping_add(nn);
             },
             // VX = VY
